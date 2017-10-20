@@ -1,0 +1,31 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+        <hibernate-mapping>
+    <class name="com.lanou.domain.Staff">
+        <id name="id">
+            <generator class="native"/>
+        </id>
+
+        <property name="sname"/>
+
+        <!--n-1关系 多个员工对应一个部门
+        insert : 当插入当前对象是否级联插入其他对象, false:不插入
+        lazy : 懒加载设置, 默认是false, 代表查询该对象时是否级联查询其他对象,
+                true : 不加载级联对象; false : 加载级联对象
+        -->
+        <many-to-one name="department"
+                     lazy="false"
+                     class="com.lanou.domain.Department"
+                     column="department_id"
+                     cascade="all"/>
+
+        <!--n-1关系 多个员工对应一个职务-->
+        <many-to-one name="post"
+                     lazy="false"
+                     class="com.lanou.domain.Post"
+                     column="post_id"
+                     cascade="all"/>
+
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <constant name="struts.i18n.encoding" value="utf-8"/>
+    <!--允许调用静态方法-->
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+    <!--整合-->
+    <package name="day09" extends="json-default">
+        <!--员工操作-->
+        <action name="listStaff" class="com.lanou.action.StaffAction" >
+            <result name="success">/list_staff.jsp</result>
+            <result name="input">/error.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <!--根据部门id获得该部门下的所有职务集合-->
+        <action name="findPost" class="com.lanou.action.StaffAction" method="findPost">
+            <result name="success" type="json">
+                <param name="root">postList</param>
+            </result>
+        </action>
+        <!--查询员工-->
+        <action name="findStaff" class="com.lanou.action.StaffAction" method="query">
+            <result name="success">/list_staff.jsp</result>
+        </action>
+    </package>
+    <!--验证码-->
+    <package name="custom" extends="struts-default">
+        <result-types>
+            <result-type name="codeimg" class="custom.CodeImageResult"/>
+        </result-types>
+        <action name="codeImg">
+            <result type="codeimg" name="success"/>
+        </action>
+
+        <action name="login" class="com.lanou.action.StaffAction" method="login">
+            <result name="success">/index.jsp</result>
+            <result name="input">/customResult.jsp</result>
+        </action>
+
+    </package>
+</struts>
