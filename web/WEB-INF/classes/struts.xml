@@ -13,7 +13,9 @@
     <package name="day09" extends="json-default">
         <!--员工操作-->
         <action name="listStaff" class="com.lanou.action.StaffAction" >
-            <result name="success">/list_staff.jsp</result>
+            <result name="success" type="json">
+                <param name="root">departments</param>
+            </result>
             <result name="input">/error.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
@@ -38,7 +40,7 @@
         </action>
 
         <action name="login" class="com.lanou.action.StaffAction" method="login">
-            <result name="success">/index.jsp</result>
+            <result name="success">/list_staff.jsp</result>
             <result name="input">/customResult.jsp</result>
         </action>
 

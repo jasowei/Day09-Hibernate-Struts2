@@ -14,12 +14,6 @@
 </head>
 <body>
 <form action="login.action">
-    user:
-    <input type="text" name="uname">
-    <br>
-    pwd:
-    <input type="password" name="pwd">
-    <br>
     验证码:
     <input type="text" name="code">
     <img id="img" src="${pageContext.request.contextPath}/codeImg.action">

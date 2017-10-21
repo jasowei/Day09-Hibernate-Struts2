@@ -14,6 +14,20 @@
     <script type="text/javascript">
 
         $(function () {
+
+            $.post(
+                    "listStaff",
+                    function (data) {
+                        var _html = "";
+                        $.each(data,function (i,n) {
+                            _html += '<option value=' + n.id + ' >' + n.dname + '</option>';
+
+                        });
+                        $("#department").append(_html);
+                    },
+                    'json'
+            );
+
             $("#department").change(function () {
                 $("#post").empty();
                 $("#post").append('<option value="-1">---请选择---</option>');
@@ -38,33 +52,41 @@
             border-collapse: collapse;
         }
 
+        th{
+            border: solid;
+            color: brown;
+        }
         td {
             border: solid;
         }
     </style>
 </head>
 <body>
+<h1>{员工管理}</h1>
 <form action="findStaff.action" method="post">
     部门:
     <select id="department" name="dept">
         <option value="-1">---请选择---</option>
-        <s:iterator var="deptList" value="#session.departments">
-            <option value="${deptList.id}">${deptList.dname}</option>
-        </s:iterator>
+        <%--<s:iterator var="deptList" value="#session.departments">--%>
+            <%--<option value="${deptList.id}">${deptList.dname}</option>--%>
+        <%--</s:iterator>--%>
     </select>
     职务:
     <select id="post" name="post">
         <option value="-1">---请选择---</option>
     </select>
 
+    姓名:
+    <input type="text" name="searchName">
+
     <input type="submit" value="query">
 </form>
 <table id="tab">
     <tr>
-        <td>ID</td>
-        <td>员工</td>
-        <td>部门</td>
-        <td>职务</td>
+        <th>ID</th>
+        <th>员工</th>
+        <th>部门</th>
+        <th>职务</th>
     </tr>
     <s:iterator value="staffs" var="staff">
         <tr>

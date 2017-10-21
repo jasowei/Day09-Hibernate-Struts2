@@ -11,7 +11,6 @@
     <title>$Title$</title>
   </head>
   <body>
-  <a href="listStaff.action">联动</a>
-  <a href="customResult.jsp">验证码</a>
+  <a href="customResult.jsp">登录</a>
   </body>
 </html>

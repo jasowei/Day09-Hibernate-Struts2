@@ -21,14 +21,16 @@ import java.util.Set;
  */
 public class StaffAction extends ActionSupport {
 
-    private String code;
+    private String code;//验证码
     private String departid;
     private Set<Post> postList;
+    private List<Staff> staffs;
+    private List<Department> departments;
 
     //表单
-    private String dept;
-    private String post;
-    private List<Staff> staffs;
+    private String dept;//部门id
+    private String post;//职务id
+    private String searchName;//姓名搜索
 
     @Override
     public String execute() throws Exception {
@@ -36,18 +38,19 @@ public class StaffAction extends ActionSupport {
         * 1.获取所有员工
         * 2.获取所有部门*/
         DepartmentService departmentService = new DepartmentServiceImpl();
-        List<Department> departments = departmentService.findAll();
+        departments = departmentService.findAll();
         //将部门集合放入request对象中的属性集合中
-        ServletActionContext.getRequest().getSession().setAttribute("departments",departments);
+//        ServletActionContext.getRequest().getSession().setAttribute("departments",departments);
         return SUCCESS;
     }
 
     /**
      * 查询部门对应职务
+     *
      * @return
      */
-    public String findPost(){
-        System.out.println("选中的部门id"+departid);
+    public String findPost() {
+        System.out.println("选中的部门id" + departid);
         //通过部门id查找当前选中的部门对象
         DepartmentService departmentService = new DepartmentServiceImpl();
         Department selectDepart = departmentService.findById(Integer.parseInt(departid));
@@ -62,41 +65,64 @@ public class StaffAction extends ActionSupport {
 
     /**
      * 查询员工
+     *
      * @return
      */
-    public String query(){
-        System.out.println(dept+"   &   "+post);
+    public String query() {
+        System.out.println(dept + "   &   " + post + "   &   " + searchName);
         StaffService staffService = new StaffServiceImpl();
-        Map<String,Object> params = new HashMap();
+        Map<String, Object> params = new HashMap();
+        StringBuilder hql = new StringBuilder("from Staff where 1=1");
 
-        if (post.equals("-1") && dept.equals("-1")){
-            staffs = staffService.findAll();
-        }else if (!post.equals("-1") && !dept.equals("-1")) {
-            String hql = "from Staff where 1=1 and department_id like:did and post_id like:pid";
+
+        if (post.equals("-1") && !dept.equals("-1")) {
+            hql.append(" and department_id like:did");
+            params.put("did", dept);
+        } else if (!post.equals("-1") && !dept.equals("-1")) {
+            hql.append(" and department_id like:did");
+            hql.append(" and post_id like:pid");
             params.put("did", dept);
             params.put("pid", post);
-            staffs = staffService.find(hql, params);
-        }else if (post.equals("-1") && !dept.equals("-1")){
-            String hql = "from Staff where 1=1 and department_id like:did";
-            params.put("did", dept);
-            staffs = staffService.find(hql, params);
+        }
+        if (!searchName.equalsIgnoreCase("")) {
+            hql.append(" and sname like:name");
+            params.put("name", searchName);
         }
 
-        System.out.println("查询员工 : "+staffs);
+        staffs = staffService.find(hql.toString(), params);
+        System.out.println("查询到的员工 : " + staffs);
         return SUCCESS;
     }
 
 
-
-
-
-    public String login(){
+    /**
+     * 验证码演示
+     *
+     * @return
+     */
+    public String login() {
         String imgTest = (String) ActionContext.getContext().getApplication().get("verifyCode");
         if (code.equalsIgnoreCase(imgTest)) {
             return SUCCESS;
         }
         addActionError("验证码错误!");
         return INPUT;
+    }
+
+    public List<Department> getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(List<Department> departments) {
+        this.departments = departments;
+    }
+
+    public String getSearchName() {
+        return searchName;
+    }
+
+    public void setSearchName(String searchName) {
+        this.searchName = searchName;
     }
 
     public List<Staff> getStaffs() {
